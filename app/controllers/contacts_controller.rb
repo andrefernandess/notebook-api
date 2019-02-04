@@ -5,12 +5,16 @@ class ContactsController < ApplicationController
   def index
     @contacts = Contact.all
 
+    #render json: @contacts, root: true -> mostra o tipo de objeto json no retorno, neste caso Contact
+    # -> render json: @contacts.map { |contact|  contact.attributes.merge({ author: "André" })}  # desta forma faz um merge com atrbutos que nao pertencem a class, usando o .map
+    # 2 forma ->render json: @contacts, methods: :author, root: true
+    #abaixo,tercera forma usando o metodo as_json sobrescrito na classe Contact. Forma mais indicada
     render json: @contacts
   end
 
   # GET /contacts/1
   def show
-    render json: @contact
+    render json: @contact.attributes.merge({ author: "André" })# mesmo caso para apenas um elemento
   end
 
   # POST /contacts
