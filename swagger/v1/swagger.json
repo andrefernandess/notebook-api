@@ -1,0 +1,105 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API V1",
+    "version": "v1"
+  },
+  "paths": {
+    "/contacts": {
+      "post": {
+        "summary": "Creates a contact",
+        "tags": [
+          "Contact"
+        ],
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "contact",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "birthdate": {
+                  "type": "datetime"
+                }
+              },
+              "required": [
+                "name",
+                "email",
+                "birthdate"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "contact created"
+          },
+          "422": {
+            "description": "invalid request"
+          }
+        }
+      }
+    },
+    "/contacts/{id}": {
+      "get": {
+        "summary": "Retrieves a contact",
+        "tags": [
+          "contacts"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "name found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "birthdate": {
+                  "type": "datetime"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "email",
+                "birthdate"
+              ]
+            }
+          },
+          "404": {
+            "description": "contact not found"
+          }
+        }
+      }
+    }
+  }
+}

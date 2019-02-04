@@ -36,7 +36,11 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   #Gerar dados aleatorios para relização de testes
   gem 'faker'
+  #para testes unitarios
+  gem 'rspec-rails', '~> 3.8'
 end
+
+gem 'rswag'
 
 group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
