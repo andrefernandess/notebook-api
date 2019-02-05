@@ -15,7 +15,7 @@ class ContactsController < ApplicationController
   # GET /contacts/1
   def show
     # render json: @contact.attributes.merge({ author: "André" })# mesmo caso para apenas um elemento
-    render json: @contact, include: [:kind, :phones]
+    render json: @contact, include: [:kind, :phones, :address]
   end
 
   # POST /contacts
@@ -23,7 +23,7 @@ class ContactsController < ApplicationController
     @contact = Contact.new(contact_params)
 
     if @contact.save
-      render json: @contact, include: [:kind, :phones], status: :created, location: @contact
+      render json: @contact, include: [:kind, :phones, :address], status: :created, location: @contact
     else
       render json: @contact.errors, status: :unprocessable_entity
     end
@@ -32,7 +32,7 @@ class ContactsController < ApplicationController
   # PATCH/PUT /contacts/1
   def update
     if @contact.update(contact_params)
-      render json: @contact, include: [:kind, :phones]
+      render json: @contact, include: [:kind, :phones, :address]
     else
       render json: @contact.errors, status: :unprocessable_entity
     end
@@ -53,7 +53,8 @@ class ContactsController < ApplicationController
     def contact_params
       params.require(:contact).permit(
         :name, :email, :birthdate, :kind_id,
-        phones_attributes: [:id, :number]
+        phones_attributes: [:id, :number, :_destroy],
+        address_attributes: [:id, :street, :city]
       )
     end
 end
