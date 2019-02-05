@@ -1,5 +1,8 @@
 class Contact < ApplicationRecord
 	belongs_to :kind #,optional: true -> torna a obrigação de tipo opcional
+	has_many :phones
+
+	accepts_nested_attributes_for :phones
 	
     def author
 			"André"
@@ -17,12 +20,18 @@ class Contact < ApplicationRecord
 			I18n.l(self.birthdate) unless self.birthdate.blank?
 		end
 		
+		# def as_json(options={})
+		# 	super(
+		# 		root: true,
+		# 		methods: [:kind_description, :author, :i18n, :birthdate_br], 
+		# 		include: { kind: { only: :description }	}
+		# 			)
+		# end
+
 		def as_json(options={})
-			super(
-				root: true,
-				methods: [:kind_description, :author, :i18n, :birthdate_br], 
-				include: { kind: { only: :description }	}
-					)
+			h = super(options)
+			h[:birthdate] = (I18n.l(self.birthdate) unless self.birthdate.blank?)
+			h
 		end
 
 		def to_br
