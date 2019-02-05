@@ -15,7 +15,7 @@ class ContactsController < ApplicationController
   # GET /contacts/1
   def show
     # render json: @contact.attributes.merge({ author: "André" })# mesmo caso para apenas um elemento
-    render json: @contact
+    render json: @contact.to_br
   end
 
   # POST /contacts
