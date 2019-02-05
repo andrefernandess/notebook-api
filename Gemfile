@@ -25,6 +25,9 @@ gem 'puma', '~> 3.11'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
+#Internacionalização
+gem 'rails-i18n', '~> 5.1'
+
 #melhorar o terminal
 gem 'pry-rails'
 

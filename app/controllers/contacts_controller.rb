@@ -14,7 +14,8 @@ class ContactsController < ApplicationController
 
   # GET /contacts/1
   def show
-    render json: @contact.attributes.merge({ author: "André" })# mesmo caso para apenas um elemento
+    # render json: @contact.attributes.merge({ author: "André" })# mesmo caso para apenas um elemento
+    render json: @contact
   end
 
   # POST /contacts
@@ -50,6 +51,6 @@ class ContactsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def contact_params
-      params.require(:contact).permit(:name, :email, :birthdate)
+      params.require(:contact).permit(:name, :email, :birthdate, :kind_id)
     end
 end
