@@ -9,13 +9,13 @@ class ContactsController < ApplicationController
     # -> render json: @contacts.map { |contact|  contact.attributes.merge({ author: "André" })}  # desta forma faz um merge com atrbutos que nao pertencem a class, usando o .map
     # 2 forma ->render json: @contacts, methods: :author, root: true
     #abaixo,tercera forma usando o metodo as_json sobrescrito na classe Contact. Forma mais indicada
-    render json: @contacts
+    render json: @contacts, include: [:kind, :address, :phones]
   end
 
   # GET /contacts/1
   def show
     # render json: @contact.attributes.merge({ author: "André" })# mesmo caso para apenas um elemento
-    render json: @contact, include: [:kind, :phones, :address]
+    render json: @contact, include: [:kind, :address, :phones], meta: { author: "André" }#->forma usada sem a gem AMS, include: [:kind, :phones, :address]
   end
 
   # POST /contacts
@@ -51,10 +51,16 @@ class ContactsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def contact_params
-      params.require(:contact).permit(
-        :name, :email, :birthdate, :kind_id,
-        phones_attributes: [:id, :number, :_destroy],
-        address_attributes: [:id, :street, :city]
-      )
+      #metodo padrão, deve ser alterado qndo trabalha com AMS
+      # params.require(:contact).permit(
+      #   :name, :email, :birthdate, :kind_id,
+      #   phones_attributes: [:id, :number, :_destroy],
+      #   address_attributes: [:id, :street, :city]
+      # )
+      ActiveModelSerializers::Deserialization.jsonapi_parse(params)
+      #para definir os campos aceitos com no .pertmit, usar:ActiveModelSerializers::Deserialization.jsonapi_parse(params ,only: [:campo1, :campo2])
+
+      #pode definir chaves para atributos com nomes diferentes, Exp:
+      #ActiveModelSerializers::Deserialization.jsonapi_parse(params, { :nome => :name, :data => created_at })
     end
 end
