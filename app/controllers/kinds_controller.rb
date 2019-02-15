@@ -1,6 +1,10 @@
 class KindsController < ApplicationController
   before_action :set_kind, only: [:show, :update, :destroy]
 
+  include ActionController::HttpAuthentication::Digest::ControllerMethods
+  USERS = { "andre" => Digest::MD5.hexdigest(["andre", "Application", "secret"].join(":"))}
+
+  before_action :authenticate
   # GET /kinds
   def index
     @kinds = Kind.all
@@ -41,11 +45,22 @@ class KindsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_kind
+      if params[:contact_id]
+        @kind = Contact.find(params[:contact_id]).kind
+        return @kind
+      end
+
       @kind = Kind.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def kind_params
       params.require(:kind).permit(:description)
+    end
+
+    def authenticate
+      authenticate_or_request_with_http_digest("Application") do |username|
+        USERS[username]
+      end
     end
 end
