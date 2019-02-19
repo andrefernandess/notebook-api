@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
+  mount_devise_token_auth_for 'User', at: 'auth'
   resources :kinds
+  resources :auths, only: [:create]
+  resources :phones, only: [:index]
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
   resources :contacts do

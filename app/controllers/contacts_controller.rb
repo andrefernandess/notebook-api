@@ -1,4 +1,8 @@
 class ContactsController < ApplicationController
+  include ActionController::HttpAuthentication::Token::ControllerMethods 
+  TOKEN = "secret123"
+  
+  before_action :authenticate
   before_action :set_contact, only: [:show, :update, :destroy]
 
   # GET /contacts
@@ -62,5 +66,14 @@ class ContactsController < ApplicationController
 
       #pode definir chaves para atributos com nomes diferentes, Exp:
       #ActiveModelSerializers::Deserialization.jsonapi_parse(params, { :nome => :name, :data => created_at })
+    end
+
+    def authenticate
+      authenticate_or_request_with_http_token do |token, options|
+        ActiveSupport::SecurityUtils.secure_compare(
+          ::Digest::SHA256.hexdigest(token),
+          ::Digest::SHA256.hexdigest(TOKEN)
+        )
+      end
     end
 end

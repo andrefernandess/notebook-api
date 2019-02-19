@@ -1,6 +1,12 @@
 class PhonesController < ApplicationController
-	before_action :set_contact
-	
+	include ActionController::HttpAuthentication::Token::ControllerMethods
+	before_action :authenticate
+	before_action :set_contact, except: :index
+
+	def index
+		@phones = Phone.all
+		render json: @phones
+	end
 	# GET /contacts/1/phones
 	def show
 		render json: @contact.phones
@@ -42,5 +48,13 @@ class PhonesController < ApplicationController
 
 	def phone_params
 		ActiveModelSerializers::Deserialization.jsonapi_parse(params)
+	end
+
+	def authenticate
+		authenticate_or_request_with_http_token do |token, options|
+			hmac_secret = 'mySecretKey'
+			JWT.decode token, hmac_secret, true, {:algorithm => 'HS256'}
+
+		end
 	end
 end

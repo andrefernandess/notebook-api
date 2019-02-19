@@ -1,10 +1,12 @@
 class KindsController < ApplicationController
+  before_action :authenticate_user!
+
   before_action :set_kind, only: [:show, :update, :destroy]
+  #bloco abaixo cometado para utilizar o devise_token_auth
+  # include ActionController::HttpAuthentication::Digest::ControllerMethods
+  # USERS = { "andre" => Digest::MD5.hexdigest(["andre", "Application", "secret"].join(":"))}
 
-  include ActionController::HttpAuthentication::Digest::ControllerMethods
-  USERS = { "andre" => Digest::MD5.hexdigest(["andre", "Application", "secret"].join(":"))}
-
-  before_action :authenticate
+  # before_action :authenticate
   # GET /kinds
   def index
     @kinds = Kind.all
@@ -58,9 +60,9 @@ class KindsController < ApplicationController
       params.require(:kind).permit(:description)
     end
 
-    def authenticate
-      authenticate_or_request_with_http_digest("Application") do |username|
-        USERS[username]
-      end
-    end
+    # def authenticate
+    #   authenticate_or_request_with_http_digest("Application") do |username|
+    #     USERS[username]
+    #   end
+    # end
 end
